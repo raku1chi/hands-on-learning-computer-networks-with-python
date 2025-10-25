@@ -1,4 +1,4 @@
-from models import Link, Node
+from models import Link, Node, Packet
 
 
 def main():
@@ -9,6 +9,9 @@ def main():
     print(node1)
     print(node2)
     print(link)
+
+    packet = Packet(src="00:01", dst="00:02", payload="Hello, World!")
+    node1.send_packet(packet)
 
 
 if __name__ == "__main__":
