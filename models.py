@@ -132,7 +132,11 @@ class Link:
 
         if self.network_graph:
             self.network_graph.add_link(
-                node_x, node_y, label=f"{bandwidth / 1000000} Mbps, {delay} s"
+                node_x,
+                node_y,
+                f"{bandwidth / 1000000} Mbps, {delay} s",
+                self.bandwidth,
+                self.delay,
             )
 
     def __str__(self):
