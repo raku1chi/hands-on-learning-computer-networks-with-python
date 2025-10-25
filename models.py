@@ -1,8 +1,88 @@
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+
+
+class NetworkGraph:
+    def __init__(self):
+        self.graph: nx.Graph[Node] = nx.Graph()
+
+    def add_node(self, node: Node, label: str | None = None):
+        self.graph.add_node(node, label=label)
+
+    def add_link(
+        self,
+        node_x: Node,
+        node_y: Node,
+        label: str | None = None,
+        bandwidth: int = 10000,
+        delay: float = 0.001,
+    ):
+        self.graph.add_edge(
+            node_x, node_y, label=label, bandwidth=bandwidth, delay=delay
+        )
+
+    def draw(self):
+        def get_edge_width(bandwidth: int) -> float:
+            return np.log10(bandwidth) + 1
+
+        def get_edge_color(delay: float) -> str:
+            if delay <= 0.001:
+                # 1ms以下
+                return "green"
+            elif delay <= 0.01:
+                # 1-10ms
+                return "yellow"
+            else:
+                # 10ms以上
+                return "red"
+
+        pos = nx.spring_layout(self.graph)
+        edge_widths = [
+            get_edge_width(data["bandwidth"])
+            for _, _, data in self.graph.edges(data=True)
+        ]
+        edge_colors = [
+            get_edge_color(data["delay"]) for _, _, data in self.graph.edges(data=True)
+        ]
+
+        nx.draw(
+            self.graph,
+            pos,
+            with_labels=False,
+            node_color="lightblue",
+            edge_color=edge_colors,
+            width=edge_widths,
+        )
+        nx.draw_networkx_labels(
+            self.graph,
+            pos,
+            labels=nx.get_node_attributes(self.graph, "label"),  # pyright: ignore[reportUnknownMemberType]
+        )
+        nx.draw_networkx_edge_labels(
+            self.graph,
+            pos,
+            edge_labels=nx.get_edge_attributes(self.graph, "label"),  # pyright: ignore[reportUnknownMemberType]
+        )
+        plt.show()  # pyright: ignore[reportUnknownMemberType]
+
+
 class Node:
-    def __init__(self, node_id: int, address: str | None = None):
+    def __init__(
+        self,
+        node_id: int,
+        address: str | None = None,
+        network_graph: NetworkGraph | None = None,
+    ):
         self.node_id = node_id
         self.address = address
         self.links: list[Link] = []
+        self.network_graph = network_graph
+
+        if self.network_graph:
+            self.network_graph.add_node(
+                self, label=f"Node {self.node_id}\n{self.address}"
+            )
 
     def __str__(self):
         connected_nodes = [
@@ -38,15 +118,22 @@ class Link:
         bandwidth: int = 10000,
         delay: float = 0.001,
         packet_loss: float = 0.0,
+        network_graph: NetworkGraph | None = None,
     ):
         self.node_x = node_x
         self.node_y = node_y
         self.bandwidth = bandwidth
         self.delay = delay
         self.packet_loss = packet_loss
+        self.network_graph = network_graph
 
         self.node_x.add_link(self)
         self.node_y.add_link(self)
+
+        if self.network_graph:
+            self.network_graph.add_link(
+                node_x, node_y, label=f"{bandwidth / 1000000} Mbps, {delay} s"
+            )
 
     def __str__(self):
         return (
