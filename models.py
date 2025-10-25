@@ -1,12 +1,5 @@
 class Node:
-    """ネットワーク内のノードを表すクラス"""
-
     def __init__(self, node_id: int, address: str | None = None):
-        """ノードの初期化
-        Args:
-            node_id (int): ノードの識別子
-            address (str | None): ノードのアドレス (デフォルトは None)
-        """
         self.node_id = node_id
         self.address = address
         self.links: list[Link] = []
@@ -19,16 +12,10 @@ class Node:
         return f"ノード(ID: {self.node_id}, アドレス: {self.address}, 接続ノード: {connected_nodes})"
 
     def add_link(self, link: Link):
-        """ノードにリンクを追加する
-        Args:
-            link (Link): 追加するリンク
-        """
         self.links.append(link)
 
 
 class Link:
-    """ネットワーク内の2つのノード間のリンクを表すクラス"""
-
     def __init__(
         self,
         node_x: Node,
@@ -37,14 +24,6 @@ class Link:
         delay: float = 0.001,
         packet_loss: float = 0.0,
     ):
-        """リンクの初期化
-        Args:
-            node_x (Node): リンクの一端のノード
-            node_y (Node): リンクのもう一端のノード
-            bandwidth (int): リンクの帯域幅 (デフォルトは 10000)
-            delay (float): リンクの遅延 (デフォルトは 0.001)
-            packet_loss (float): リンクのパケットロス率 (デフォルトは 0.0)
-        """
         self.node_x = node_x
         self.node_y = node_y
         self.bandwidth = bandwidth
