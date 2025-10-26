@@ -4,6 +4,12 @@ Pythonを使ったネットワークシミュレーションの学習プロジ�
 
 [『Pythonで動かしながら学ぶ　コンピュータネットワーク』（中山　悠）｜講談社](https://www.kodansha.co.jp/book/products/0000416613)
 
+## 実行方法
+
+```bash
+uv run python main.py
+```
+
 ## 実装内容
 
 ### 1章: コンピュータネットワークの基本要素
@@ -34,12 +40,6 @@ Pythonを使ったネットワークシミュレーションの学習プロジ�
 - Node 1 ↔ Node 2: 10 Mbps, 1ms
 - Node 2 ↔ Node 3: 1 Mbps, 10ms
 - Node 2 ↔ Node 4: 100 bps, 100ms
-
-## 実行方法
-
-```bash
-uv run python main.py
-```
 
 ### 2章: ネットワークと時間
 
